@@ -57,7 +57,10 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
           if (success) {
             // Redirect to dashboard after successful login
             console.log('Login successful, redirecting...')
-            router.push("/")
+            // Add a small delay to ensure state is updated
+            setTimeout(() => {
+              router.push("/")
+            }, 100)
           } else {
             console.log('Login failed, showing error')
             setLoginError("Login failed. Please try again.")

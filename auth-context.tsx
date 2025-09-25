@@ -165,6 +165,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.setItem('auth_token', mockToken)
       setToken(mockToken)
       setUser(mockUser)
+      setIsLoading(false)
       
       console.log('Mock login successful')
       return true
