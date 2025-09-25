@@ -136,6 +136,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true)
+      console.log('🚀 MOCK AUTHENTICATION STARTING - NO API CALLS')
       console.log('Using mock authentication for demo')
       
       // MOCK AUTHENTICATION FOR DEMO - Accept any credentials
@@ -165,7 +166,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(mockUser)
       setIsLoading(false)
       
-      console.log('Mock login successful')
+      console.log('✅ MOCK LOGIN SUCCESSFUL - NO API CALLS MADE')
       return true
     } catch (error) {
       console.error('Login error:', error)
