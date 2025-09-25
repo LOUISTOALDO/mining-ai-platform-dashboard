@@ -7,6 +7,8 @@ interface User {
   email: string
   username: string
   full_name: string
+  name?: string
+  avatar?: string
   is_active: boolean
   is_superuser: boolean
   created_at: string
@@ -41,6 +43,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Simple token validation
   const isTokenValid = (token: string): boolean => {
     try {
+      // Accept mock tokens for demo
+      if (token.startsWith('mock-jwt-token-')) {
+        return true
+      }
       // Basic JWT token validation - check if it has 3 parts separated by dots
       const parts = token.split('.')
       return parts.length === 3
@@ -71,29 +77,51 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const existingToken = localStorage.getItem('auth_token')
     if (existingToken && isTokenValid(existingToken)) {
       setToken(existingToken)
-      // Try to get user info
-      fetch(`${API_BASE_URL}/users/me`, {
-        headers: {
-          'Authorization': `Bearer ${existingToken}`,
-          ...(API_BASE_URL.includes('ngrok') && { 'ngrok-skip-browser-warning': 'true' }),
-        },
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json()
+      
+      // Handle mock tokens for demo
+      if (existingToken.startsWith('mock-jwt-token-')) {
+        // Mock user for demo
+        const mockUser = {
+          id: 1,
+          email: 'demo@example.com',
+          username: 'demo',
+          full_name: 'Demo User',
+          name: 'Demo User',
+          avatar: undefined,
+          is_active: true,
+          is_superuser: false,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          last_login: new Date().toISOString(),
+          roles: ['admin']
         }
-        throw new Error('Failed to fetch user info')
-      })
-      .then(userData => {
-        setUser(userData)
+        setUser(mockUser)
         setIsLoading(false)
-      })
-      .catch(() => {
-        setToken(null)
-        setUser(null)
-        setIsLoading(false)
-        localStorage.removeItem('auth_token')
-      })
+      } else {
+        // Try to get user info from API
+        fetch(`${API_BASE_URL}/users/me`, {
+          headers: {
+            'Authorization': `Bearer ${existingToken}`,
+            ...(API_BASE_URL.includes('ngrok') && { 'ngrok-skip-browser-warning': 'true' }),
+          },
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.json()
+          }
+          throw new Error('Failed to fetch user info')
+        })
+        .then(userData => {
+          setUser(userData)
+          setIsLoading(false)
+        })
+        .catch(() => {
+          setToken(null)
+          setUser(null)
+          setIsLoading(false)
+          localStorage.removeItem('auth_token')
+        })
+      }
     } else {
       setToken(null)
       setUser(null)
@@ -110,6 +138,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true)
       console.log('Attempting login with:', email, 'to:', `${API_BASE_URL}/token`)
       
+      // MOCK AUTHENTICATION FOR DEMO - Accept any credentials
+      console.log('Using mock authentication for demo')
+      
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Mock successful login
+      const mockToken = 'mock-jwt-token-' + Date.now()
+      const mockUser = {
+        id: 1,
+        email: email,
+        username: email.split('@')[0],
+        full_name: 'Demo User',
+        name: 'Demo User',
+        avatar: undefined,
+        is_active: true,
+        is_superuser: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        last_login: new Date().toISOString(),
+        roles: ['admin']
+      }
+      
+      // Store mock token and user
+      localStorage.setItem('auth_token', mockToken)
+      setToken(mockToken)
+      setUser(mockUser)
+      
+      console.log('Mock login successful')
+      return true
+      
+      // Original API code (commented out for demo)
+      /*
       const response = await fetch(`${API_BASE_URL}/token`, {
         method: 'POST',
         headers: {
@@ -175,6 +236,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       
       return true
+      */
     } catch (error) {
       console.error('Login error:', error)
       return false
