@@ -51,15 +51,20 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
       } else {
         // Use auth context
         console.log('Calling login function...')
-        const success = await login(email, password)
-        console.log('Login result:', success)
-        if (success) {
-          // Redirect to dashboard after successful login
-          console.log('Login successful, redirecting...')
-          router.push("/")
-        } else {
-          console.log('Login failed, showing error')
-          setLoginError("Invalid email or password. Please check your credentials and ensure the backend is running.")
+        try {
+          const success = await login(email, password)
+          console.log('Login result:', success)
+          if (success) {
+            // Redirect to dashboard after successful login
+            console.log('Login successful, redirecting...')
+            router.push("/")
+          } else {
+            console.log('Login failed, showing error')
+            setLoginError("Login failed. Please try again.")
+          }
+        } catch (error) {
+          console.error('Login error:', error)
+          setLoginError("Login failed. Please try again.")
         }
       }
     }
@@ -94,6 +99,11 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
             <p className="text-gray-400 mt-2">
               Access your mining operations dashboard
             </p>
+            <div className="mt-4 p-3 bg-blue-900/20 border border-blue-800 rounded-md">
+              <p className="text-sm text-blue-300">
+                Demo Mode: Enter any email and password to access the dashboard
+              </p>
+            </div>
           </CardHeader>
           
           <CardContent>
