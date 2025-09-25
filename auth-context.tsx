@@ -136,11 +136,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true)
-      console.log('Attempting login with:', email, 'to:', `${API_BASE_URL}/token`)
-      
-      // MOCK AUTHENTICATION FOR DEMO - Accept any credentials
       console.log('Using mock authentication for demo')
       
+      // MOCK AUTHENTICATION FOR DEMO - Accept any credentials
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000))
       
