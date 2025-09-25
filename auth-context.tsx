@@ -134,46 +134,34 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [])
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      setIsLoading(true)
-      console.log('🚀 MOCK AUTHENTICATION STARTING - NO API CALLS')
-      console.log('Using mock authentication for demo')
-      
-      // MOCK AUTHENTICATION FOR DEMO - Accept any credentials
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Mock successful login
-      const mockToken = 'mock-jwt-token-' + Date.now()
-      const mockUser = {
-        id: 1,
-        email: email,
-        username: email.split('@')[0],
-        full_name: 'Demo User',
-        name: 'Demo User',
-        avatar: undefined,
-        is_active: true,
-        is_superuser: false,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        last_login: new Date().toISOString(),
-        roles: ['admin']
-      }
-      
-      // Store mock token and user
-      localStorage.setItem('auth_token', mockToken)
-      setToken(mockToken)
-      setUser(mockUser)
-      setIsLoading(false)
-      
-      console.log('✅ MOCK LOGIN SUCCESSFUL - NO API CALLS MADE')
-      return true
-    } catch (error) {
-      console.error('Login error:', error)
-      return false
-    } finally {
-      setIsLoading(false)
+    // NUCLEAR OPTION - COMPLETELY NEW LOGIN FUNCTION
+    console.log('🚀🚀🚀 NUCLEAR LOGIN STARTING 🚀🚀🚀')
+    
+    // Immediate mock authentication - no delays, no API calls
+    const mockToken = 'nuclear-mock-token-' + Date.now()
+    const mockUser = {
+      id: 999,
+      email: email,
+      username: 'NuclearUser',
+      full_name: 'Nuclear Demo User',
+      name: 'Nuclear Demo User',
+      avatar: undefined,
+      is_active: true,
+      is_superuser: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      last_login: new Date().toISOString(),
+      roles: ['admin']
     }
+    
+    // Store immediately
+    localStorage.setItem('auth_token', mockToken)
+    setToken(mockToken)
+    setUser(mockUser)
+    setIsLoading(false)
+    
+    console.log('✅✅✅ NUCLEAR LOGIN SUCCESSFUL ✅✅✅')
+    return true
   }
 
   const logout = () => {
