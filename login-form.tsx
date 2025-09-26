@@ -46,6 +46,9 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
     console.log('🚀🚀🚀 NUCLEAR LOGIN BYPASS STARTING 🚀🚀🚀')
     console.log('🚀🚀🚀 NUCLEAR LOGIN BYPASS STARTING 🚀🚀🚀')
     console.log('🚀🚀🚀 NUCLEAR LOGIN BYPASS STARTING 🚀🚀🚀')
+    console.log('🔥🔥🔥 WHITE BACKGROUND CONFIRMS NEW CODE 🔥🔥🔥')
+    console.log('🔥🔥🔥 WHITE BACKGROUND CONFIRMS NEW CODE 🔥🔥🔥')
+    console.log('🔥🔥🔥 WHITE BACKGROUND CONFIRMS NEW CODE 🔥🔥🔥')
     
     if (validateForm()) {
       // NUCLEAR AUTHENTICATION - COMPLETELY BYPASS EVERYTHING
@@ -85,7 +88,7 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4" style={{fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'}}>
+    <div className="min-h-screen bg-white flex items-center justify-center p-4" style={{fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'}}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
