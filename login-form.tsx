@@ -95,7 +95,7 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <Card className="shadow-xl border-0 bg-gray-900/80 backdrop-blur-sm border-gray-800">
+        <Card className="shadow-xl border-0 bg-green-500 backdrop-blur-sm border-gray-800">
           <CardHeader className="text-center pb-8">
             <div className="mb-6">
               <span style={{
