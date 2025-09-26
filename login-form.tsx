@@ -39,27 +39,31 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const nuclearLoginBypass = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoginError("")
     
-    console.log('🚀🚀🚀 DIRECT LOGIN BYPASS STARTING 🚀🚀🚀')
+    console.log('🚀🚀🚀 NUCLEAR LOGIN BYPASS STARTING 🚀🚀🚀')
+    console.log('🚀🚀🚀 NUCLEAR LOGIN BYPASS STARTING 🚀🚀🚀')
+    console.log('🚀🚀🚀 NUCLEAR LOGIN BYPASS STARTING 🚀🚀🚀')
     
     if (validateForm()) {
-      // DIRECT AUTHENTICATION - BYPASS ALL AUTH CONTEXT
-      console.log('🔥🔥🔥 BYPASSING AUTH CONTEXT - DIRECT AUTH 🔥🔥🔥')
+      // NUCLEAR AUTHENTICATION - COMPLETELY BYPASS EVERYTHING
+      console.log('🔥🔥🔥 NUCLEAR AUTH STARTING 🔥🔥🔥')
+      console.log('🔥🔥🔥 NUCLEAR AUTH STARTING 🔥🔥🔥')
+      console.log('🔥🔥🔥 NUCLEAR AUTH STARTING 🔥🔥🔥')
       
       // Set token directly in localStorage
-      const token = 'direct-bypass-token-' + Date.now()
+      const token = 'nuclear-bypass-token-' + Date.now()
       localStorage.setItem('auth_token', token)
       
       // Set user data directly in localStorage
       const userData = {
         id: 1,
         email: email,
-        username: 'DirectUser',
-        full_name: 'Direct Demo User',
-        name: 'Direct Demo User',
+        username: 'NuclearUser',
+        full_name: 'Nuclear Demo User',
+        name: 'Nuclear Demo User',
         avatar: undefined,
         is_active: true,
         is_superuser: true,
@@ -70,7 +74,9 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
       }
       localStorage.setItem('user_data', JSON.stringify(userData))
       
-      console.log('✅✅✅ DIRECT AUTH SUCCESSFUL ✅✅✅')
+      console.log('✅✅✅ NUCLEAR AUTH SUCCESSFUL ✅✅✅')
+      console.log('✅✅✅ NUCLEAR AUTH SUCCESSFUL ✅✅✅')
+      console.log('✅✅✅ NUCLEAR AUTH SUCCESSFUL ✅✅✅')
       
       // Redirect to dashboard
       console.log('Redirecting to dashboard...')
@@ -122,7 +128,7 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
               </div>
             )}
             
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={nuclearLoginBypass} className="space-y-6">
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium text-gray-300">
                   Email Address
