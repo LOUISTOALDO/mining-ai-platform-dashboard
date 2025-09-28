@@ -204,10 +204,11 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
 
         <div className="mt-8 text-center">
           <p className="text-xs text-gray-600">
-            © 2024 elysium. All rights reserved.
+            © 2025 elysium. All rights reserved.
           </p>
         </div>
       </motion.div>
     </div>
   )
+
 }
