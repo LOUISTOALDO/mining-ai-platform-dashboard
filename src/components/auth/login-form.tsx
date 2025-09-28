@@ -46,25 +46,34 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
     e.preventDefault()
     setLoginError("")
     
-    console.log('Login form submitted with:', email, password)
+    console.log('🔐 Login form submitted with:', { email, password })
     
     if (validateForm()) {
+      console.log('✅ Form validation passed')
       if (onLogin) {
+        console.log('📞 Using custom onLogin handler')
         onLogin(email, password)
       } else {
         // Use auth context
-        console.log('Calling login function...')
-        const success = await login(email, password)
-        console.log('Login result:', success)
-        if (success) {
-          // Redirect to dashboard after successful login
-          console.log('Login successful, redirecting...')
-          router.push("/")
-        } else {
-          console.log('Login failed, showing error')
-          setLoginError("Invalid email or password. Please check your credentials and ensure the backend is running.")
+        console.log('🔑 Calling auth context login function...')
+        try {
+          const success = await login(email, password)
+          console.log('🎯 Login result:', success)
+          if (success) {
+            // Redirect to dashboard after successful login
+            console.log('✅ Login successful, redirecting to dashboard...')
+            router.push("/")
+          } else {
+            console.log('❌ Login failed, showing error')
+            setLoginError("Invalid email or password. Please try again.")
+          }
+        } catch (error) {
+          console.error('💥 Login error:', error)
+          setLoginError("An error occurred during login. Please try again.")
         }
       }
+    } else {
+      console.log('❌ Form validation failed:', errors)
     }
   }
 
