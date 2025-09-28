@@ -26,76 +26,66 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {}
     
-    // Relaxed validation for demo - just check if fields are not empty
     if (!email) {
       newErrors.email = "Email is required"
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Email is invalid"
     }
     
     if (!password) {
       newErrors.password = "Password is required"
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters"
     }
     
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  const nuclearLoginBypass = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoginError("")
     
-    console.log('🚀🚀🚀 NUCLEAR LOGIN BYPASS STARTING 🚀🚀🚀')
-    console.log('🚀🚀🚀 NUCLEAR LOGIN BYPASS STARTING 🚀🚀🚀')
-    console.log('🚀🚀🚀 NUCLEAR LOGIN BYPASS STARTING 🚀🚀🚀')
-    console.log('🔥🔥🔥 WHITE BACKGROUND CONFIRMS NEW CODE 🔥🔥🔥')
-    console.log('🔥🔥🔥 WHITE BACKGROUND CONFIRMS NEW CODE 🔥🔥🔥')
-    console.log('🔥🔥🔥 WHITE BACKGROUND CONFIRMS NEW CODE 🔥🔥🔥')
+    console.log('🔐 Login form submitted with:', { email, password })
     
     if (validateForm()) {
-      // NUCLEAR AUTHENTICATION - COMPLETELY BYPASS EVERYTHING
-      console.log('🔥🔥🔥 NUCLEAR AUTH STARTING 🔥🔥🔥')
-      console.log('🔥🔥🔥 NUCLEAR AUTH STARTING 🔥🔥🔥')
-      console.log('🔥🔥🔥 NUCLEAR AUTH STARTING 🔥🔥🔥')
-      
-      // Set token directly in localStorage
-      const token = 'nuclear-bypass-token-' + Date.now()
-      localStorage.setItem('auth_token', token)
-      
-      // Set user data directly in localStorage
-      const userData = {
-        id: 1,
-        email: email,
-        username: 'NuclearUser',
-        full_name: 'Nuclear Demo User',
-        name: 'Nuclear Demo User',
-        avatar: undefined,
-        is_active: true,
-        is_superuser: true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        last_login: new Date().toISOString(),
-        roles: ['admin']
+      console.log('✅ Form validation passed')
+      if (onLogin) {
+        console.log('📞 Using custom onLogin handler')
+        onLogin(email, password)
+      } else {
+        // Use auth context
+        console.log('🔑 Calling auth context login function...')
+        try {
+          const success = await login(email, password)
+          console.log('🎯 Login result:', success)
+          if (success) {
+            // Redirect to dashboard after successful login
+            console.log('✅ Login successful, redirecting to dashboard...')
+            router.push("/")
+          } else {
+            console.log('❌ Login failed, showing error')
+            setLoginError("Invalid email or password. Please try again.")
+          }
+        } catch (error) {
+          console.error('💥 Login error:', error)
+          setLoginError("An error occurred during login. Please try again.")
+        }
       }
-      localStorage.setItem('user_data', JSON.stringify(userData))
-      
-      console.log('✅✅✅ NUCLEAR AUTH SUCCESSFUL ✅✅✅')
-      console.log('✅✅✅ NUCLEAR AUTH SUCCESSFUL ✅✅✅')
-      console.log('✅✅✅ NUCLEAR AUTH SUCCESSFUL ✅✅✅')
-      
-      // Redirect to dashboard
-      console.log('Redirecting to dashboard...')
-      router.push("/")
+    } else {
+      console.log('❌ Form validation failed:', errors)
     }
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4" style={{fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'}}>
+    <div className="min-h-screen bg-black flex items-center justify-center p-4" style={{fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'}}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <Card className="shadow-xl border-0 bg-green-500 backdrop-blur-sm border-gray-800">
+        <Card className="shadow-xl border-0 bg-gray-900/80 backdrop-blur-sm border-gray-800">
           <CardHeader className="text-center pb-8">
             <div className="mb-6">
               <span style={{
@@ -116,11 +106,6 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
             <p className="text-gray-400 mt-2">
               Access your mining operations dashboard
             </p>
-            <div className="mt-4 p-3 bg-blue-900/20 border border-blue-800 rounded-md">
-              <p className="text-sm text-blue-300">
-                Demo Mode: Enter any email and password to access the dashboard
-              </p>
-            </div>
           </CardHeader>
           
           <CardContent>
@@ -131,7 +116,7 @@ export function LoginForm({ onLogin, isLoading = false }: LoginFormProps) {
               </div>
             )}
             
-            <form onSubmit={nuclearLoginBypass} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium text-gray-300">
                   Email Address

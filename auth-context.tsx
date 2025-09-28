@@ -7,8 +7,6 @@ interface User {
   email: string
   username: string
   full_name: string
-  name?: string
-  avatar?: string
   is_active: boolean
   is_superuser: boolean
   created_at: string
@@ -43,8 +41,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // Simple token validation
   const isTokenValid = (token: string): boolean => {
     try {
-      // Accept mock tokens for demo
-      if (token.startsWith('mock-jwt-token-')) {
+      // Accept mock tokens for demo purposes
+      if (token.startsWith('mock-token-')) {
         return true
       }
       // Basic JWT token validation - check if it has 3 parts separated by dots
@@ -78,31 +76,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (existingToken && isTokenValid(existingToken)) {
       setToken(existingToken)
       
-      // Handle mock tokens for demo
-      if (existingToken.startsWith('mock-jwt-token-')) {
-        // Mock user for demo
-        const mockUser = {
-          id: 1,
-          email: 'demo@example.com',
-          username: 'demo',
-          full_name: 'Demo User',
-          name: 'Demo User',
-          avatar: undefined,
-          is_active: true,
-          is_superuser: false,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          last_login: new Date().toISOString(),
-          roles: ['admin']
+      // Handle mock tokens
+      if (existingToken.startsWith('mock-token-')) {
+        console.log('🔄 MOCK TOKEN DETECTED - Loading mock user data')
+        const storedUserData = localStorage.getItem('user_data')
+        if (storedUserData) {
+          try {
+            const userData = JSON.parse(storedUserData)
+            setUser(userData)
+            setIsLoading(false)
+            console.log('✅ Mock user data loaded from localStorage')
+          } catch (error) {
+            console.error('Error parsing mock user data:', error)
+            setIsLoading(false)
+          }
+        } else {
+          setIsLoading(false)
         }
-        setUser(mockUser)
-        setIsLoading(false)
       } else {
-        // Try to get user info from API
+        // Handle real API tokens
         fetch(`${API_BASE_URL}/users/me`, {
           headers: {
             'Authorization': `Bearer ${existingToken}`,
-            ...(API_BASE_URL.includes('ngrok') && { 'ngrok-skip-browser-warning': 'true' }),
           },
         })
         .then(response => {
@@ -134,34 +129,53 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [])
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // BYPASS ALL EXISTING CODE - DIRECT AUTHENTICATION
-    console.log('🔥🔥🔥 BYPASSING ALL CODE - DIRECT AUTH 🔥🔥🔥')
+    console.log('🚀 MOCK AUTHENTICATION - Bypassing API completely')
+    console.log('📧 Email:', email)
+    console.log('🔒 Password length:', password.length)
     
-    // Force authentication immediately
-    const token = 'bypass-token-' + Date.now()
-    const user = {
-      id: 1,
-      email: email,
-      username: 'BypassUser',
-      full_name: 'Bypass Demo User',
-      name: 'Bypass Demo User',
-      avatar: undefined,
-      is_active: true,
-      is_superuser: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      last_login: new Date().toISOString(),
-      roles: ['admin']
+    // Simulate a brief loading delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    
+    // Accept ANY credentials - this is pure mock authentication
+    if (email && password) {
+      console.log('✅ MOCK LOGIN SUCCESSFUL - Any credentials accepted')
+      
+      // Generate a mock token
+      const mockToken = `mock-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      console.log('🎫 Generated token:', mockToken)
+      
+      // Create mock user data
+      const mockUser = {
+        id: 1,
+        email: email,
+        username: email.split('@')[0] || 'demo',
+        full_name: 'Demo User',
+        name: 'Demo User',
+        avatar: undefined,
+        is_active: true,
+        is_superuser: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        last_login: new Date().toISOString(),
+        roles: ['admin']
+      }
+      console.log('👤 Created user:', mockUser)
+      
+      // Set authentication state
+      setToken(mockToken)
+      setUser(mockUser)
+      localStorage.setItem('auth_token', mockToken)
+      localStorage.setItem('user_data', JSON.stringify(mockUser))
+      
+      console.log('💾 Stored in localStorage - token and user data')
+      setIsLoading(false)
+      console.log('🎉 Login function returning true')
+      return true
     }
     
-    // Direct state setting
-    localStorage.setItem('auth_token', token)
-    setToken(token)
-    setUser(user)
+    console.log('❌ Login failed - missing email or password')
     setIsLoading(false)
-    
-    console.log('🎉🎉🎉 BYPASS AUTH SUCCESSFUL 🎉🎉🎉')
-    return true
+    return false
   }
 
   const logout = () => {
@@ -175,24 +189,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return
     }
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          ...(API_BASE_URL.includes('ngrok') && { 'ngrok-skip-browser-warning': 'true' }),
-        },
-      })
-
-      if (response.ok) {
-        const userData = await response.json()
+    console.log('🔄 MOCK REFRESH USER - Using stored mock data')
+    
+    // For mock authentication, just use the stored user data
+    const storedUserData = localStorage.getItem('user_data')
+    if (storedUserData) {
+      try {
+        const userData = JSON.parse(storedUserData)
         setUser(userData)
-      } else {
-        // If /auth/me fails, keep existing user - don't change anything
-        console.warn('Failed to fetch user details, keeping existing user')
+        console.log('✅ Mock user data refreshed from localStorage')
+      } catch (error) {
+        console.error('Error parsing stored user data:', error)
       }
-    } catch (error) {
-      console.error('Error refreshing user:', error)
-      // Keep existing user - don't change anything
     }
   }
 
